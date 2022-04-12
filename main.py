@@ -3,7 +3,7 @@ import pyautogui
 import time
 
 # screen centre 683, 384
-viewBoxCoordsSmallCentre = [658, 359, 708, 409]
+viewBoxCoords = [673, 374, 693, 394]
 
 def mineMithril():
     time.sleep(3)
@@ -11,7 +11,7 @@ def mineMithril():
     pixels_moved = 0
     pyautogui.moveRel(1, 0)
     while True:
-        im = ImageGrab.grab(bbox=viewBoxCoordsSmallCentre)
+        im = ImageGrab.grab(bbox=viewBoxCoords)
         rgb_im = im.convert('RGB')
         should_be_mining = not lookingAtBedrock(rgb_im)
         if (not mouse_down) and should_be_mining:
@@ -33,8 +33,8 @@ def mineMithril():
 
 def lookingAtBedrock(pixelarray):
     threshold = 10
-    for i in range(50):
-        for j in range(50):
+    for i in range(20):
+        for j in range(20):
             r, g, b = pixelarray.getpixel((i, j))
             if (r < threshold) and (g < threshold) and (b < threshold):
                 return True
@@ -42,19 +42,29 @@ def lookingAtBedrock(pixelarray):
 
 
 def nextBlock(pixels_moved):
-    if pixels_moved < 400:
+    if pixels_moved < 500:
         pyautogui.moveRel(50, 0)
         pixels_moved += 50
-    elif pixels_moved < 500:
+    elif pixels_moved < 600:
         pyautogui.moveRel(0, 50)
         pixels_moved += 50
-    elif pixels_moved < 900:
+    elif pixels_moved < 1100:
         pyautogui.moveRel(-50, 0)
         pixels_moved += 50
-    elif pixels_moved < 1000:
-        pyautogui.moveRel(0, -50)
+    elif pixels_moved < 1200:
+        pyautogui.moveRel(0, 50)
+        pixels_moved += 50
+    elif pixels_moved < 1700:
+        pyautogui.moveRel(50, 0)
+        pixels_moved += 50
+    elif pixels_moved < 1800:
+        pyautogui.moveRel(0, 50)
+        pixels_moved += 50
+    elif pixels_moved < 2300:
+        pyautogui.moveRel(-50, 0)
         pixels_moved += 50
     else:
+        pyautogui.moveRel(0, -300)
         pixels_moved = 0
     return pixels_moved
 
