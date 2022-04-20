@@ -1,19 +1,34 @@
 from PIL import ImageGrab
 import pyautogui
 import time
+import keyboard
 
-# screen centre 683, 384
-viewBoxCoords = [673, 374, 693, 394]
 
-def mineMithril():
+def centered_box(width):
+    screen_size = pyautogui.size()
+    return [screen_size[0] - width, screen_size[1] - width, screen_size[0] + width, screen_size[1] + width]
+
+
+def mine():
+    # switch windows
     time.sleep(3)
+    # state vars
     mouse_down = False
     pixels_moved = 0
+    num_fails = 0
+    view_box_coords = centered_box(10)
+    started_mining_time = time.perf_counter()
+    loop_count = 0
+    # lets begin!
     pyautogui.moveRel(1, 0)
     while True:
-        im = ImageGrab.grab(bbox=viewBoxCoords)
+        if keyboard.is_pressed("e"):
+            break
+        if num_fails == 5:
+            break
+        im = ImageGrab.grab(bbox=view_box_coords)
         rgb_im = im.convert('RGB')
-        should_be_mining = not lookingAtBedrock(rgb_im)
+        should_be_mining = not looking_at_bedrock(rgb_im)
         if (not mouse_down) and should_be_mining:
             pyautogui.mouseDown()
             mouse_down = True
@@ -22,26 +37,49 @@ def mineMithril():
             pyautogui.mouseUp()
             mouse_down = False
         elif (not mouse_down) and (not should_be_mining):
-            pixels_moved = nextBlock(pixels_moved)
+            pixels_moved = next_block(pixels_moved)
+            num_fails = 0
         else:
             time_mined = time.perf_counter() - started_mining_time
-            if time_mined > 5:
+            if time_mined > 3:
                 pyautogui.mouseUp()
                 mouse_down = False
-                pixels_moved = nextBlock(pixels_moved)
+                pixels_moved = next_block(pixels_moved)
+                num_fails += 1
+        # randomly move?
+        if loop_count == 1:
+            pyautogui.keyDown('ctrl')
+            pyautogui.keyDown('d')
+        elif loop_count == 3:
+            pyautogui.keyUp('ctrl')
+            pyautogui.keyUp('d')
+        elif loop_count == 6:
+            pyautogui.keyDown('ctrl')
+            pyautogui.keyDown('a')
+        elif loop_count == 8:
+            pyautogui.keyUp('ctrl')
+            pyautogui.keyUp('a')
+        elif loop_count == 10:
+            loop_count = 0
+        loop_count += 1
+
+    pyautogui.keyUp('ctrl')
+    pyautogui.press('esc')
+    time.sleep(1)
+    pyautogui.click(690, 540)
 
 
-def lookingAtBedrock(pixelarray):
+def looking_at_bedrock(pixel_array):
     threshold = 10
     for i in range(20):
         for j in range(20):
-            r, g, b = pixelarray.getpixel((i, j))
+            r, g, b = pixel_array.getpixel((i, j))
             if (r < threshold) and (g < threshold) and (b < threshold):
                 return True
     return False
 
 
-def nextBlock(pixels_moved):
+def next_block(pixels_moved):
     if pixels_moved < 500:
         pyautogui.moveRel(50, 0)
         pixels_moved += 50
@@ -70,4 +108,4 @@ def nextBlock(pixels_moved):
 
 
 if __name__ == '__main__':
-    mineMithril()
+    mine()
