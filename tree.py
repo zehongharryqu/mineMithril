@@ -6,9 +6,10 @@ import time
 SCREENCENTREX = 683
 SCREENCENTREY = 384
 
-# coords of item details 305, 650
-ITEMDETAILSX = 305
-ITEMDETAILSY = 650
+# coords of item details
+ITEMDETAILSX = 302
+ITEMDETAILSY = 665
+
 
 def chop_tree():
     time.sleep(3)
@@ -42,7 +43,7 @@ def chop_tree():
                 pyautogui.mouseUp()
                 mouse_down = False
             else:
-                tree_in_sight = red_box(SCREENCENTREX - 5, SCREENCENTREY - 200, 10, 300, False)
+                tree_in_sight = red_box(SCREENCENTREX - 25, SCREENCENTREY - 200, 50, 300, False)
                 if tree_in_sight:
                     if not w_down:
                         pyautogui.keyDown('w')
@@ -68,10 +69,11 @@ def chop_tree():
                             pyautogui.moveRel(1000, 0)
                     next_tree = red_box(0, SCREENCENTREY - 100, 2 * SCREENCENTREX, 200, False)
                     if next_tree:
-                        if next_tree[0] < SCREENCENTREX:
-                            pyautogui.moveRel(-50, 0)
+                        look_dist = (next_tree[0] - SCREENCENTREX)/1.4
+                        if look_dist > 0:
+                            pyautogui.moveRel(look_dist + 25, 0)
                         else:
-                            pyautogui.moveRel(50, 0)
+                            pyautogui.moveRel(look_dist - 25, 0)
                     else:
                         pyautogui.moveRel(500, 0)
 
@@ -80,6 +82,7 @@ def chop_tree():
 def red_box(x, y, width, height, all_required):
     viewbox = [x, y, x + width, y + height]
     im = ImageGrab.grab(bbox=viewbox)
+    im.save("testimg.png")
     rgb_im = im.convert('RGB')
     for i in range(width):
         for j in range(height):
