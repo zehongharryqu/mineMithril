@@ -6,7 +6,9 @@ import keyboard
 
 def centered_box(width):
     screen_size = pyautogui.size()
-    return [screen_size[0] - width, screen_size[1] - width, screen_size[0] + width, screen_size[1] + width]
+    centre_x = screen_size[0] / 2
+    centre_y = screen_size[1] / 2
+    return [centre_x - width, centre_y - width, centre_x + width, centre_y + width]
 
 
 def mine():
@@ -17,56 +19,56 @@ def mine():
     pixels_moved = 0
     num_fails = 0
     view_box_coords = centered_box(10)
-    started_mining_time = time.perf_counter()
     loop_count = 0
     # lets begin!
     pyautogui.moveRel(1, 0)
-    while True:
-        if keyboard.is_pressed("e"):
-            break
-        if num_fails == 5:
-            break
-        im = ImageGrab.grab(bbox=view_box_coords)
-        rgb_im = im.convert('RGB')
-        should_be_mining = not looking_at_bedrock(rgb_im)
-        if (not mouse_down) and should_be_mining:
-            pyautogui.mouseDown()
-            mouse_down = True
-            started_mining_time = time.perf_counter()
-        elif mouse_down and (not should_be_mining):
-            pyautogui.mouseUp()
-            mouse_down = False
-        elif (not mouse_down) and (not should_be_mining):
-            pixels_moved = next_block(pixels_moved)
-            num_fails = 0
-        else:
-            time_mined = time.perf_counter() - started_mining_time
-            if time_mined > 3:
+    try:
+        while True:
+            if keyboard.is_pressed("e"):
+                break
+            assert (num_fails < 5), "too many failed blocks"
+            im = ImageGrab.grab(bbox=view_box_coords)
+            rgb_im = im.convert('RGB')
+            should_be_mining = not looking_at_bedrock(rgb_im)
+            if (not mouse_down) and should_be_mining:
+                pyautogui.mouseDown()
+                mouse_down = True
+                started_mining_time = time.perf_counter()
+            elif mouse_down and (not should_be_mining):
                 pyautogui.mouseUp()
                 mouse_down = False
+            elif (not mouse_down) and (not should_be_mining):
                 pixels_moved = next_block(pixels_moved)
-                num_fails += 1
-        # randomly move?
-        if loop_count == 1:
-            pyautogui.keyDown('ctrl')
-            pyautogui.keyDown('d')
-        elif loop_count == 3:
-            pyautogui.keyUp('ctrl')
-            pyautogui.keyUp('d')
-        elif loop_count == 6:
-            pyautogui.keyDown('ctrl')
-            pyautogui.keyDown('a')
-        elif loop_count == 8:
-            pyautogui.keyUp('ctrl')
-            pyautogui.keyUp('a')
-        elif loop_count == 10:
-            loop_count = 0
-        loop_count += 1
-
-    pyautogui.keyUp('ctrl')
-    pyautogui.press('esc')
-    time.sleep(1)
-    pyautogui.click(690, 540)
+                num_fails = 0
+            else:
+                time_mined = time.perf_counter() - started_mining_time
+                if time_mined > 5:
+                    pyautogui.mouseUp()
+                    mouse_down = False
+                    pixels_moved = next_block(pixels_moved)
+                    num_fails += 1
+            # randomly move?
+            # if loop_count == 1:
+            #     pyautogui.keyDown('ctrl')
+            #     pyautogui.keyDown('d')
+            # elif loop_count == 3:
+            #     pyautogui.keyUp('ctrl')
+            #     pyautogui.keyUp('d')
+            # elif loop_count == 6:
+            #     pyautogui.keyDown('ctrl')
+            #     pyautogui.keyDown('a')
+            # elif loop_count == 8:
+            #     pyautogui.keyUp('ctrl')
+            #     pyautogui.keyUp('a')
+            # elif loop_count == 10:
+            #     loop_count = 0
+            # loop_count += 1
+    except Exception as e:
+        print(e)
+        pyautogui.keyUp('ctrl')
+        pyautogui.press('esc')
+        time.sleep(2)
+        pyautogui.click(690, 540)
 
 
 def looking_at_bedrock(pixel_array):
