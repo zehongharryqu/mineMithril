@@ -1,7 +1,12 @@
-
 import pyautogui
 import time
 
+# tuning - sell
+BIN_FIRST_POT_X = 575
+BIN_FIRST_POT_Y = 525
+NEXT_SLOT = 36
+PRICE_X = 720
+PRICE_Y = 390
 
 def brew_pots():
     time.sleep(2)
@@ -38,29 +43,29 @@ def sell_pots():
         for j in range(9):
             if i == 1 and j == 5:
                 return
-            pyautogui.moveTo(540 + 36 * j, 445 + 36 * i)
+            pyautogui.moveTo(BIN_FIRST_POT_X + NEXT_SLOT * j, BIN_FIRST_POT_Y + NEXT_SLOT * i)
             pyautogui.click()
             time.sleep(0.5)
-            pyautogui.moveTo(755, 310)  # duration
+            pyautogui.moveTo(PRICE_X + 2 * NEXT_SLOT, PRICE_Y)  # duration
             pyautogui.click()
             time.sleep(0.5)
-            pyautogui.moveTo(575, 275)  # 1hr
+            pyautogui.moveTo(PRICE_X - 3 * NEXT_SLOT, PRICE_Y - NEXT_SLOT)  # 1hr
             pyautogui.click()
             time.sleep(0.5)
-            pyautogui.moveTo(755 - 2 * 36, 310)  # price
+            pyautogui.moveTo(PRICE_X, PRICE_Y) # price
             pyautogui.click()
             time.sleep(1)
             pyautogui.write('195', interval=0.25)
-            pyautogui.moveTo(680, 460)  # done
+            pyautogui.moveTo(725, 485)  # done
             pyautogui.click()
             time.sleep(0.5)
-            pyautogui.moveTo(755 - 4 * 36, 310)  # submit
+            pyautogui.moveTo(PRICE_X - 2 * NEXT_SLOT, PRICE_Y)  # submit
             pyautogui.click()
             time.sleep(0.5)
-            pyautogui.moveTo(610, 295)  # confirm
+            pyautogui.moveTo(PRICE_X - 2 * NEXT_SLOT, PRICE_Y - NEXT_SLOT/2)  # confirm
             pyautogui.click()
             time.sleep(0.5)
-            pyautogui.moveTo(685, 390)  # go back
+            pyautogui.moveTo(PRICE_X, PRICE_Y + 2 * NEXT_SLOT)  # go back
             pyautogui.click()
             time.sleep(0.5)
 
