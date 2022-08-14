@@ -18,12 +18,12 @@ def brew_pots():
             if bottles_in == 3:
                 pyautogui.moveTo(first_inv[0] + cell_size * 6, first_inv[1] + cell_size * 3)  # add wart
                 shift_click()
-                time.sleep(22)
+                time.sleep(25)
                 pyautogui.moveTo(*brew_top)  # remove wart
                 shift_click()
                 pyautogui.moveTo(first_inv[0] + cell_size * 7, first_inv[1] + cell_size * 3)  # add sugar
                 shift_click()
-                time.sleep(22)
+                time.sleep(25)
                 pyautogui.moveTo(*brew_top)  # remove sugar
                 shift_click()
                 for k in range(3):
@@ -60,9 +60,9 @@ if __name__ == '__main__':
         first_inv = (577, 522)
         brew_top = (720, 316)
         cell_size = 36
-    elif sys.argv[1] == "h":
-        first_inv = (577, 522)
-        brew_top = (720, 316)
+    elif pyautogui.size() == (1366, 768):
+        first_inv = (538, 446)
+        brew_top = (682, 241)
         cell_size = 36
     else:
         first_inv = (577, 522)

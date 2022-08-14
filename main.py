@@ -5,7 +5,7 @@ import keyboard
 
 # tuning
 STEP_SIZE = 50
-WIDTH_STEPS = 5
+WIDTH_STEPS = 10
 HEIGHT_STEPS = 2
 DC_X = 690
 DC_Y = 540
@@ -56,21 +56,21 @@ def mine():
                     steps_moved = next_block(steps_moved)
                     num_fails += 1
             # move back and forth
-            if loop_count == 1:
-                pyautogui.keyDown('ctrl')
-                pyautogui.keyDown('d')
-            elif loop_count == 2:
-                pyautogui.keyUp('ctrl')
-                pyautogui.keyUp('d')
-            elif loop_count == 11:
-                pyautogui.keyDown('ctrl')
-                pyautogui.keyDown('a')
-            elif loop_count == 12:
-                pyautogui.keyUp('ctrl')
-                pyautogui.keyUp('a')
-            elif loop_count == 20:
-                loop_count = 0
-            loop_count += 1
+            # if loop_count == 1:
+            #     pyautogui.keyDown('ctrl')
+            #     pyautogui.keyDown('d')
+            # elif loop_count == 2:
+            #     pyautogui.keyUp('ctrl')
+            #     pyautogui.keyUp('d')
+            # elif loop_count == 11:
+            #     pyautogui.keyDown('ctrl')
+            #     pyautogui.keyDown('a')
+            # elif loop_count == 12:
+            #     pyautogui.keyUp('ctrl')
+            #     pyautogui.keyUp('a')
+            # elif loop_count == 20:
+            #     loop_count = 0
+            # loop_count += 1
     except Exception as e:
         print(e)
         pyautogui.keyUp('ctrl')
