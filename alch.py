@@ -1,12 +1,7 @@
 import pyautogui
 import time
-
-# Mac
-# FIRST_INV = (577, 522)
-# BREW_TOP = (720, 316)
-FIRST_INV = (577, 522)
-BREW_TOP = (720, 316)
-NEXT_SLOT = 36
+import platform
+import sys
 
 
 def brew_pots():
@@ -17,22 +12,22 @@ def brew_pots():
         for j in range(9):
             if i == 3 and j == 6:
                 return
-            pyautogui.moveTo(FIRST_INV[0] + NEXT_SLOT * j, FIRST_INV[1] + NEXT_SLOT * i)
+            pyautogui.moveTo(first_inv[0] + cell_size * j, first_inv[1] + cell_size * i)
             shift_click()
             bottles_in += 1
             if bottles_in == 3:
-                pyautogui.moveTo(FIRST_INV[0] + NEXT_SLOT * 6, FIRST_INV[1] + NEXT_SLOT * 3)  # add wart
+                pyautogui.moveTo(first_inv[0] + cell_size * 6, first_inv[1] + cell_size * 3)  # add wart
                 shift_click()
                 time.sleep(22)
-                pyautogui.moveTo(*BREW_TOP)  # remove wart
+                pyautogui.moveTo(*brew_top)  # remove wart
                 shift_click()
-                pyautogui.moveTo(FIRST_INV[0] + NEXT_SLOT * 7, FIRST_INV[1] + NEXT_SLOT * 3)  # add sugar
+                pyautogui.moveTo(first_inv[0] + cell_size * 7, first_inv[1] + cell_size * 3)  # add sugar
                 shift_click()
                 time.sleep(22)
-                pyautogui.moveTo(*BREW_TOP)  # remove sugar
+                pyautogui.moveTo(*brew_top)  # remove sugar
                 shift_click()
                 for k in range(3):
-                    pyautogui.moveTo(BREW_TOP[0] + NEXT_SLOT * (-2 + 2 * k), BREW_TOP[1] + NEXT_SLOT * 3)  # pot
+                    pyautogui.moveTo(brew_top[0] + cell_size * (-2 + 2 * k), brew_top[1] + cell_size * 3)  # pot
                     shift_click()
                 bottles_in = 0
 
@@ -42,7 +37,7 @@ def sell_pots():
     pyautogui.write('e9', interval=0.5)
     pyautogui.click()
     time.sleep(0.5)
-    pyautogui.moveTo(BREW_TOP[0], BREW_TOP[1]+NEXT_SLOT)
+    pyautogui.moveTo(brew_top[0], brew_top[1]+cell_size)
     time.sleep(0.5)
     pyautogui.click()
     time.sleep(0.5)
@@ -50,7 +45,7 @@ def sell_pots():
         for j in range(9):
             if i == 3 and j == 6:
                 return
-            pyautogui.click(FIRST_INV[0] + NEXT_SLOT * j, FIRST_INV[1] + NEXT_SLOT * i)
+            pyautogui.click(first_inv[0] + cell_size * j, first_inv[1] + cell_size * i)
             time.sleep(0.5)
 
 
@@ -61,5 +56,17 @@ def shift_click():
 
 
 if __name__ == '__main__':
+    if platform.system() == "Darwin":
+        first_inv = (577, 522)
+        brew_top = (720, 316)
+        cell_size = 36
+    elif sys.argv[1] == "h":
+        first_inv = (577, 522)
+        brew_top = (720, 316)
+        cell_size = 36
+    else:
+        first_inv = (577, 522)
+        brew_top = (720, 316)
+        cell_size = 36
     brew_pots()
     sell_pots()
