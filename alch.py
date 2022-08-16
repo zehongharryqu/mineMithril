@@ -1,7 +1,6 @@
 import pyautogui
 import time
 import platform
-import sys
 
 
 def brew_pots():
@@ -51,7 +50,9 @@ def sell_pots():
 
 def shift_click():
     pyautogui.keyDown('shift')
+    time.sleep(0.25)
     pyautogui.click()
+    time.sleep(0.25)
     pyautogui.keyUp('shift')
 
 
