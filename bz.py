@@ -8,45 +8,38 @@ if __name__ == '__main__':
     if not args:
         print("please run bz.py ITEM #_OF_ORDERS PRICE")
         sys.exit()
+    item = args[0]
     orders = int(args[1])
     while orders:
         time.sleep(2)
         pyautogui.write('/bz', interval=0.25)
         pyautogui.press('enter')
         time.sleep(1)
-        pyautogui.click(*bzc.COORDS["mining"])
-        time.sleep(0.2)
-        if args[0] == "jade":
-            pyautogui.click(*bzc.COORDS["gems"])
-            time.sleep(0.2)
-            pyautogui.click(*bzc.COORDS["jade"])
-        elif args[0] == "topaz":
-            pyautogui.click(*bzc.COORDS["gems"])
-            time.sleep(0.2)
-            pyautogui.click(*bzc.COORDS["topaz"])
-        elif args[0] == "ice":
-            pyautogui.click(*bzc.COORDS["ices"])
-            time.sleep(0.2)
-            pyautogui.click(*bzc.COORDS["ice"])
+        coords_list = bzc.COORDS.find(item)
+        coords_list = coords_list[1:]
+        if coords_list:
+            for c in coords_list:
+                pyautogui.click(*c)
+                time.sleep(0.5)
         else:
-            print("that item not supported :c")
+            print("that item is not supported :c")
             sys.exit()
         time.sleep(0.2)
-        pyautogui.click(*bzc.COORDS["buy"])
+        pyautogui.click(*bzc.BUY)
         time.sleep(0.2)
-        pyautogui.moveTo(*bzc.COORDS["amount"])
+        pyautogui.moveTo(*bzc.AMOUNT)
         pyautogui.click()
         time.sleep(1)
         pyautogui.write('71680', interval=0.25)
         time.sleep(0.2)
-        pyautogui.click(*bzc.COORDS["done"])
+        pyautogui.click(*bzc.DONE)
         time.sleep(0.2)
-        pyautogui.moveTo(*bzc.COORDS["amount"])
+        pyautogui.moveTo(*bzc.AMOUNT)
         pyautogui.click()
         time.sleep(1)
         pyautogui.write(args[2], interval=0.25)
         time.sleep(0.2)
-        pyautogui.click(*bzc.COORDS["done"])
+        pyautogui.click(*bzc.DONE)
         time.sleep(0.2)
-        pyautogui.click(*bzc.COORDS["confirm"])
+        pyautogui.click(*bzc.CONFIRM)
         orders -= 1

@@ -1,21 +1,15 @@
-from PIL import ImageGrab
 import pyautogui
 import time
 import keyboard
+import os
+import platform
 
 # tuning
 STEP_SIZE = 50
-WIDTH_STEPS = 10
-HEIGHT_STEPS = 2
+WIDTH_STEPS = 5
+HEIGHT_STEPS = 1
 DC_X = 690
 DC_Y = 540
-
-
-def centered_box(width):
-    screen_size = pyautogui.size()
-    centre_x = screen_size[0] / 2
-    centre_y = screen_size[1] / 2
-    return [centre_x - width, centre_y - width, centre_x + width, centre_y + width]
 
 
 def mine():
@@ -25,19 +19,16 @@ def mine():
     mouse_down = False
     steps_moved = 0
     num_fails = 0
-    view_box_coords = centered_box(10)
     loop_count = 0
     started_mining_time = time.perf_counter()
     # lets begin!
-    pyautogui.moveRel(1, 0)
+    move_rel(1, 0)
     try:
         while True:
-            if keyboard.is_pressed("e"):
-                break
-            assert (num_fails < 5), "too many failed blocks"
-            im = ImageGrab.grab(bbox=view_box_coords)
-            rgb_im = im.convert('RGB')
-            should_be_mining = not looking_at_bedrock(rgb_im, 20)
+            # if keyboard.is_pressed("e"):
+            #     break
+            assert (num_fails < 3), "too many failed blocks"
+            should_be_mining = not looking_at_bedrock()
             if (not mouse_down) and should_be_mining:
                 pyautogui.mouseDown()
                 mouse_down = True
@@ -50,7 +41,7 @@ def mine():
                 num_fails = 0
             else:
                 time_mined = time.perf_counter() - started_mining_time
-                if time_mined > 5:
+                if time_mined > 7:
                     pyautogui.mouseUp()
                     mouse_down = False
                     steps_moved = next_block(steps_moved)
@@ -79,42 +70,69 @@ def mine():
         pyautogui.click(DC_X, DC_Y)
 
 
-def looking_at_bedrock(pixel_array, width):
-    threshold = 10
-    for i in range(width):
-        for j in range(width):
-            r, g, b = pixel_array.getpixel((i, j))
-            if (r < threshold) and (g < threshold) and (b < threshold):
-                return True
-    return False
+def looking_at_bedrock():
+    screen_size = pyautogui.size()
+    x = screen_size[0]
+    y = screen_size[1]
+    return pyautogui.pixelMatchesColor(x, y, (0, 1, 0))
 
 
 def next_block(steps_moved):
     if steps_moved < WIDTH_STEPS:
-        pyautogui.moveRel(STEP_SIZE, 0)
+        move_rel(STEP_SIZE, 0)
         steps_moved += 1
     elif steps_moved < WIDTH_STEPS + HEIGHT_STEPS:
-        pyautogui.moveRel(0, STEP_SIZE)
+        move_rel(0, STEP_SIZE)
         steps_moved += 1
     elif steps_moved < 2 * WIDTH_STEPS + HEIGHT_STEPS:
-        pyautogui.moveRel(-STEP_SIZE, 0)
+        move_rel(-STEP_SIZE, 0)
         steps_moved += 1
     elif steps_moved < 2 * WIDTH_STEPS + 2 * HEIGHT_STEPS:
-        pyautogui.moveRel(0, STEP_SIZE)
+        move_rel(0, STEP_SIZE)
         steps_moved += 1
     elif steps_moved < 3 * WIDTH_STEPS + 2 * HEIGHT_STEPS:
-        pyautogui.moveRel(STEP_SIZE, 0)
+        move_rel(STEP_SIZE, 0)
         steps_moved += 1
     elif steps_moved < 3 * WIDTH_STEPS + 3 * HEIGHT_STEPS:
-        pyautogui.moveRel(0, STEP_SIZE)
+        move_rel(0, STEP_SIZE)
         steps_moved += 1
     elif steps_moved < 4 * WIDTH_STEPS + 3 * HEIGHT_STEPS:
-        pyautogui.moveRel(-STEP_SIZE, 0)
+        move_rel(-STEP_SIZE, 0)
         steps_moved += 1
     else:
-        pyautogui.moveRel(0, -STEP_SIZE * HEIGHT_STEPS * 3)
+        move_rel(0, -STEP_SIZE * HEIGHT_STEPS * 3)
         steps_moved = 0
     return steps_moved
+
+
+def move_rel(right, down):
+    if platform.system() == "Darwin":
+        if right != 0:
+            if right > 0:
+                keycode = 88
+            else:
+                right *= -1
+                keycode = 86
+            cmd = f""" osascript -e '
+                        repeat {right*2} times
+                            tell application "System Events" to key code {keycode}
+                        end repeat'
+                    """
+            os.system(cmd)
+        if down != 0:
+            if down > 0:
+                keycode = 84
+            else:
+                down *= -1
+                keycode = 91
+            cmd = f""" osascript -e '
+                        repeat {down*2} times
+                            tell application "System Events" to key code {keycode}
+                        end repeat'
+                    """
+            os.system(cmd)
+    else:
+        pyautogui.moveRel(right, down)
 
 
 if __name__ == '__main__':
