@@ -81,6 +81,16 @@ COORDS = BzcoordTree("root", (0, 0), [
         ])
     ]),
     BzcoordTree("mining", (FARMING[0], FARMING[1] + 1 * CELL), [
+        BzcoordTree("irons", (FARMING[0] + 4 * CELL, FARMING[1] + 1 * CELL), [
+            BzcoordTree("iron", (FARMING[0] + 2 * CELL, FARMING[1] + 2 * CELL), []),
+            BzcoordTree("eiron", (FARMING[0] + 4 * CELL, FARMING[1] + 2 * CELL), []),
+            BzcoordTree("eironblock", (FARMING[0] + 6 * CELL, FARMING[1] + 2 * CELL), [])
+        ]),
+        BzcoordTree("golds", (FARMING[0] + 5 * CELL, FARMING[1] + 1 * CELL), [
+            BzcoordTree("gold", (FARMING[0] + 2 * CELL, FARMING[1] + 2 * CELL), []),
+            BzcoordTree("egold", (FARMING[0] + 4 * CELL, FARMING[1] + 2 * CELL), []),
+            BzcoordTree("egoldblock", (FARMING[0] + 6 * CELL, FARMING[1] + 2 * CELL), [])
+        ]),
         BzcoordTree("gemstones", (FARMING[0] + 2 * CELL, FARMING[1] + 2 * CELL), [
             BzcoordTree("jade", (FARMING[0] + 1 * CELL, FARMING[1]), []),
             BzcoordTree("amber", (FARMING[0] + 2 * CELL, FARMING[1]), []),
